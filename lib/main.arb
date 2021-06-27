@@ -1,0 +1,90 @@
+# frozen_string_literal: true
+
+require_relative 'code_set'
+require_relative 'game_turns'
+require_relative 'computer_think'
+require_relative 'code_check'
+
+# plays a game of mastermind
+class MasterMind
+  include CodeSet
+  include CodeCheck
+  include GameTurns
+  include ComputerThink
+
+  def initialize
+    @turn = 1
+    @code = '0'
+    @solutions = ('0000'..'9999').to_a
+    puts 'Welcome to a game of Mastermind!'
+    puts "Who's cracking the code?"
+    puts 'Press 1 to guess against the computer'
+    puts 'Press 2 to have the computer guess your code'
+    choose_mode # decide if vshuman or vscomputer
+  end
+
+  def choose_mode
+    case gets.chomp
+    when '1'
+      computer_code
+      '1'
+    when '2'
+      player_code
+      '2'
+    else
+      puts 'Wrong input'
+      choose_mode
+    end
+  end
+
+  # computer guessing algorithms
+  def computer_think
+    if @turn == 1
+      @comp_guess = '1122'
+      @solutions.delete(@comp_guess)
+      puts "computer guesses #{@comp_guess}"
+      return @comp_guess
+    end
+
+    output = [@correct_places, @wrong_places]
+
+    if output == [0, 0] # pick solutions without any of these digits
+      @solutions.select! { |solution| solution.split('').intersection(@comp_guess.split('')).empty? }
+    end
+    if output[0].positive? & output[1].zero? # pick solutions with the same positions for n numbers
+      @solutions.select! do |solution|
+        @comp_guess.split('').each.with_index.select do |digit, index|
+          digit == solution
+                   .split('')[index]
+        end.length == output[0]
+      end
+    end
+    if output[1].positive?
+      combinations = @solutions.select do |solution|
+        @comp_guess.split('').permutation(output[1]).to_a.uniq.select do |variant|
+          solution
+            .include? variant.join
+        end.any?
+      end
+      including = @solutions.select! do |solution|
+        @comp_guess.split('').each.with_index.select do |digit, index|
+          digit == solution
+                   .split('')[index]
+        end.length == output[0]
+      end
+      including.empty? ? @solutions -= combinations : @solutions -= (combinations - including) 
+    end
+
+    unless @solutions.include? @code
+      p 'the code has been eliminated!'
+      exit
+    end
+
+    @comp_guess = @solutions.sample
+    @solutions.delete(@comp_guess)
+    puts "computer guesses #{@comp_guess}"
+    @comp_guess
+  end
+end
+
+game = MasterMind.new
