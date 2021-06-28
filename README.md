@@ -1,8 +1,7 @@
 # MastermindNdjTop
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/mastermind_ndj_top`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+CLI game of Mastermind with numbers [0-9] for added difficulty.
+Exercise assignment of The Odin Project (https://www.theodinproject.com)
 
 ## Installation
 
@@ -32,7 +31,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/mastermind_ndj_top.
+Bug reports and pull requests are welcome on GitHub at https://github.com/naivedjack/mastermind_ndj_top.
 
 
 ## License
